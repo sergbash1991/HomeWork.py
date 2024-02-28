@@ -25,5 +25,100 @@
 
 class Vector:
     def __init__(self, *args):
-        for i, arg in enumerate(args):
-            pass
+        self.coords = []
+        for arg in args:
+            if isinstance(arg, int | float):
+                self.coords.append(arg)
+            else:
+                raise TypeError('Type must be int or float')
+
+    def __add__(self, other):
+        new_coords = []
+        if len(self.coords) > len(other.coords):
+            for i in range(len(other.coords)):
+                new_coords.append(sum([self.coords[i], other.coords[i]]))
+            for j in range(len(other.coords), len(self.coords)):
+                new_coords.append(self.coords[j])
+        elif len(self.coords) < len(other.coords):
+            for i in range(len(self.coords)):
+                new_coords.append(sum([self.coords[i], other.coords[i]]))
+            for j in range(len(self.coords), len(other.coords)):
+                new_coords.append(other.coords[j])
+        else:
+            for i in range(len(other.coords)):
+                new_coords.append(sum([self.coords[i], other.coords[i]]))
+        return Vector(*new_coords)
+
+
+    def __sub__(self, other):
+        new_coords = []
+        if len(self.coords) > len(other.coords):
+            for i in range(len(other.coords)):
+                new_coords.append(self.coords[i] - other.coords[i])
+            for j in range(len(other.coords), len(self.coords)):
+                new_coords.append(self.coords[j])
+        elif len(self.coords) < len(other.coords):
+            for i in range(len(self.coords)):
+                new_coords.append(self.coords[i] - other.coords[i])
+            for j in range(len(self.coords), len(other.coords)):
+                new_coords.append(other.coords[j])
+        else:
+            for i in range(len(other.coords)):
+                new_coords.append(self.coords[i] - other.coords[i])
+        return Vector(*new_coords)
+
+    def __mul__(self, other):
+        new_coords = []
+        if len(self.coords) > len(other.coords):
+            for i in range(len(other.coords)):
+                new_coords.append(self.coords[i] * other.coords[i])
+            for j in range(len(other.coords), len(self.coords)):
+                new_coords.append(self.coords[j])
+        elif len(self.coords) < len(other.coords):
+            for i in range(len(self.coords)):
+                new_coords.append(self.coords[i] * other.coords[i])
+            for j in range(len(self.coords), len(other.coords)):
+                new_coords.append(other.coords[j])
+        else:
+            for i in range(len(other.coords)):
+                new_coords.append(self.coords[i] * other.coords[i])
+        return Vector(*new_coords)
+
+    def __iadd__(self, other):
+        if isinstance(other, Vector):
+            return self + other
+        elif isinstance(other, int | float):
+            self.coords = [num + other for num in self.coords]
+            return self
+
+    def __isub__(self, other):
+        if isinstance(other, Vector):
+            return self - other
+        elif isinstance(other, int | float):
+            self.coords = [num - other for num in self.coords]
+            return self
+
+    def __eq__(self, other):
+        if isinstance(other, Vector):
+            return self.coords == other.coords
+
+    def __ne__(self, other):
+        if isinstance(other, Vector):
+            return self.coords != other.coords
+
+
+    def __str__(self):
+        return str(self.coords)
+
+
+v1 = Vector(1, 2, 3.5, -2)
+v2 = Vector(2, 3)
+v3 = v1 + v2
+print(v3)
+v4 = v1 - v2
+print(v4)
+v5 = v1 * v2
+print(v5)
+v1 += v2
+print(v1)
+print(v1 != v2)
